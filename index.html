@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Family Group eke ayata Cricket</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Family Group eke ayata Cricket</h1>
+            <p>Live Stream Experience</p>
+        </header>
+
+        <main class="player-container">
+            <div class="video-wrapper">
+                <video id="video" controls autoplay playsinline></video>
+            </div>
+
+            <div class="message-box">
+                <p>Chuti mamage Asanipe duru wiimata pin pinisa sajith wisin sadana ladii..</p>
+            </div>
+
+            <div class="controls">
+                <p id="status" class="status-message">Loading Stream...</p>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2026 Live Stream. Premium Experience.</p>
+        </footer>
+    </div>
+
+    <script>
+        var video = document.getElementById('video');
+        var videoSrc = 'https://mut001.myluck1.top:8088/live/webcricn04/playlist.m3u8?vidictid=204966578618&id=114607&pk=67bd78b12d42238889833dfd99715b4a05258ee48a3d1f9a0a9060d4d346240fed790636838a39915cdc52fff43beff115a0a8f3cf37e89ca24f4a60ec0da9f5';
+        var statusText = document.getElementById('status');
+
+        if (Hls.isSupported()) {
+            var config = {
+                startLevel: 0,              // Start with the lowest quality for faster loading
+                capLevelToPlayerSize: true, // Don't load higher resolution than the screen supports
+                autoStartLoad: true
+            };
+            var hls = new Hls(config);
+            hls.loadSource(videoSrc);
+            hls.attachMedia(video);
+            hls.on(Hls.Events.MANIFEST_PARSED, function () {
+                video.play();
+                statusText.innerText = "Enjoy the Match!";
+            });
+            hls.on(Hls.Events.ERROR, function (event, data) {
+                if (data.fatal) {
+                    statusText.innerText = "Error loading stream. Retrying...";
+                    switch (data.type) {
+                        case Hls.ErrorTypes.NETWORK_ERROR:
+                            console.log("fatal network error encountered, try to recover");
+                            hls.startLoad();
+                            break;
+                        case Hls.ErrorTypes.MEDIA_ERROR:
+                            console.log("fatal media error encountered, try to recover");
+                            hls.recoverMediaError();
+                            break;
+                        default:
+                            hls.destroy();
+                            statusText.innerText = "Stream is currently offline.";
+                            break;
+                    }
+                }
+            });
+        }
+        else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            video.src = videoSrc;
+            video.addEventListener('loadedmetadata', function () {
+                video.play();
+                statusText.innerText = "Enjoy the Match!";
+            });
+        }
+    </script>
+</body>
+
+</html>
